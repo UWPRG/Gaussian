@@ -4,7 +4,10 @@ Converts Gaussian log files (`*.log`) to `*.xyz` files for easy visualization on
 
 In an optimization job, it will write coordinates at all optimization steps. Using `-l` or `--last-frame` will override this and only return the final frame.
 
-**Only applies to Gaussian 16 log files.**
+## Dependencies
+- `python`
+- `pandas`
+- **Gaussian 16 log files**
 
 ## Usage
 ```
