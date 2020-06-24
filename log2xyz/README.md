@@ -32,7 +32,7 @@ optional arguments:
   -p POST_HARTREE_FOCK, --post-hartree-fock POST_HARTREE_FOCK
                         denotes a post-Hartree-Fock level of theory; default
                         assumes semiempirical, HF, or DFT level of theory;
-                        valid options are: MP2, MP3, MP4
+                        valid options are: MP2, MP3
   -o OUTFILE, --outfile OUTFILE
                         output file name with or without xyz extension; xyz
                         extension is forced; optional

@@ -48,7 +48,7 @@ if __name__ == '__main__':
     parser.add_argument('-p', '--post-hartree-fock', help='denotes a ' +
                         'post-Hartree-Fock level of theory; default assumes ' +
                         'semiempirical, HF, or DFT level of theory; valid ' +
-                        'options are: MP2, MP3, MP4')
+                        'options are: MP2, MP3')
     parser.add_argument('-o', '--outfile', default=None,
                         help='output file name with or ' +
                         'without xyz extension; xyz extension is forced; ' +
