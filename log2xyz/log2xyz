@@ -11,8 +11,19 @@ except ImportError:
     raise ImportError("Install numpy to use this script.")
 
 
-element_dict = {1: 'H', 2: 'He', 3: 'Li', 4: 'Be', 5: 'B', 6: 'C', 8: 'O',
-                9: 'F', 10: 'Ne', 11: 'Na', 16: 'S'}
+element_dict = {1: 'H', 2: 'He', 3: 'Li', 4: 'Be', 5: 'B', 6: 'C', 7: 'N',
+                8: 'O', 9: 'F', 10: 'Ne', 11: 'Na', 16: 'S'}
+
+def fortrandouble(x):
+    """Converts string of Fortran double scientific notation to python float.
+    
+    Example
+    -------
+    >>> val = '-0.12345D+03'
+    >>> print(fortrandouble(val))
+    -123.45
+    """
+    return float(x.replace('D', 'E'))
 
 
 class Args:
@@ -34,7 +45,12 @@ if __name__ == '__main__':
                         help='turn off energy recording')
     parser.add_argument('-l', '--last-frame', action='store_true',
                         help='save only last structure')
-    parser.add_argument('-o', '--outfile', help='output file name with or ' +
+    parser.add_argument('-p', '--post-hartree-fock', help='denotes a ' +
+                        'post-Hartree-Fock level of theory; default assumes ' +
+                        'semiempirical, HF, or DFT level of theory; valid ' +
+                        'options are: MP2, MP3, MP4')
+    parser.add_argument('-o', '--outfile', default=None,
+                        help='output file name with or ' +
                         'without xyz extension; xyz extension is forced; ' +
                         'optional')
     parser.add_argument('logfile', default=None,
@@ -47,7 +63,17 @@ if __name__ == '__main__':
     full = args.all
     no_energy = args.no_energy
     last_frame = args.last_frame
+    post_hartree_fock = args.post_hartree_fock
     outfile = args.outfile
+
+    # Check post-Hartree-Fock method ------------------------------------------
+    post_HF_options = {'MP2': 'EUMP2', 'MP3': 'EUMP3'}
+    if post_hartree_fock:
+        assert post_hartree_fock in post_HF_options.keys(), \
+            "{} not available. ".format(post_hartree_fock) +\
+            "Must choose from: {}".format(post_HF_options.keys())
+    else:
+        pass
 
     # Read log file into lists ------------------------------------------------
     cartcoords = []
@@ -55,7 +81,8 @@ if __name__ == '__main__':
     step_num = []
     step_pattern = r'\d+'
     energy = []
-    e_pattern =r'([-]?\d+\.\d+)'
+    scf_pattern =r'([-]?\d+\.\d+)'
+    mp_pattern = r'([-]?\d+\.\d+[DE][+-]\d+)'
     with open(logfile, 'r') as logf:
         for line in logf:
             if 'Input orientation' in line.strip():
@@ -71,8 +98,18 @@ if __name__ == '__main__':
             elif 'Step number' in line.strip():
                 nums = re.findall(step_pattern, line)
                 step_num.append([int(n) for n in nums])
-            elif 'SCF Done' in line.strip() and not no_energy:
-                energy.append(float(re.findall(e_pattern, line)[0]))
+            elif not no_energy:
+                # Set parameters for grepping the energy from log file
+                if post_hartree_fock:
+                    grep_string = post_HF_options[post_hartree_fock]
+                    ener_pattern = mp_pattern
+                else:
+                    grep_string = 'SCF Done'
+                    ener_pattern = scf_pattern
+                if grep_string in line.strip():
+                    ener_string = re.findall(ener_pattern, line)[-1]
+                    ener_float = fortrandouble(ener_string)
+                    energy.append(ener_float)
             else:
                 pass
 
