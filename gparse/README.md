@@ -40,5 +40,7 @@ optional arguments:
 
 # Installation
 ```
+git clone https://github.com/UWPRG/Gaussian.git
+cd Gaussian/gparse
 pip install -e .
 ```
