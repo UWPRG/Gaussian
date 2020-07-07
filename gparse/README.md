@@ -1,4 +1,4 @@
-# log2xyz
+# gparse
 
 Converts Gaussian log files (`*.log`) to `*.xyz` files for easy visualization on Hyak.
 
