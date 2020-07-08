@@ -12,6 +12,22 @@ except ImportError:
 element_dict = {1: 'H', 2: 'He', 3: 'Li', 4: 'Be', 5: 'B', 6: 'C', 7: 'N',
                 8: 'O', 9: 'F', 10: 'Ne', 11: 'Na', 16: 'S'}
 
+
+def check_post_hartree_fock(post_HF):
+    """Check if post-HF method is being used and which one.
+
+    Parameters
+    ----------
+    post_HF : str
+        String of post-HF level
+
+    Returns
+    -------
+    using_post_HF : bool
+    """
+    pass
+
+
 def fortrandouble(x):
     """Converts string of Fortran double scientific notation to python float.
     
